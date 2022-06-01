@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "side": "worldleveling:block/sooty_bricks",
+    "front": "worldleveling:block/sooty_bricks",
+    "bottom": "worldleveling:block/sooty_forge_item_output",
+    "top": "worldleveling:block/sooty_bricks"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "side": "worldleveling:block/sooty_bricks",
+    "front": "worldleveling:block/sooty_forge_fuel_input",
+    "top": "worldleveling:block/sooty_bricks"
+  }
+}

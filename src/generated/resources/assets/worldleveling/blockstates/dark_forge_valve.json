@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,type=item_in": {
+      "model": "worldleveling:block/dark_forge_item_input"
+    },
+    "facing=south,type=item_in": {
+      "model": "worldleveling:block/dark_forge_item_input",
+      "y": 180
+    },
+    "facing=west,type=item_in": {
+      "model": "worldleveling:block/dark_forge_item_input",
+      "y": 270
+    },
+    "facing=east,type=item_in": {
+      "model": "worldleveling:block/dark_forge_item_input",
+      "y": 90
+    },
+    "facing=north,type=item_out": {
+      "model": "worldleveling:block/dark_forge_item_output"
+    },
+    "facing=south,type=item_out": {
+      "model": "worldleveling:block/dark_forge_item_output",
+      "y": 180
+    },
+    "facing=west,type=item_out": {
+      "model": "worldleveling:block/dark_forge_item_output",
+      "y": 270
+    },
+    "facing=east,type=item_out": {
+      "model": "worldleveling:block/dark_forge_item_output",
+      "y": 90
+    },
+    "facing=north,type=fuel_in": {
+      "model": "worldleveling:block/dark_forge_fuel_input"
+    },
+    "facing=south,type=fuel_in": {
+      "model": "worldleveling:block/dark_forge_fuel_input",
+      "y": 180
+    },
+    "facing=west,type=fuel_in": {
+      "model": "worldleveling:block/dark_forge_fuel_input",
+      "y": 270
+    },
+    "facing=east,type=fuel_in": {
+      "model": "worldleveling:block/dark_forge_fuel_input",
+      "y": 90
+    },
+    "facing=north,type=air_in": {
+      "model": "worldleveling:block/dark_forge_air_input"
+    },
+    "facing=south,type=air_in": {
+      "model": "worldleveling:block/dark_forge_air_input",
+      "y": 180
+    },
+    "facing=west,type=air_in": {
+      "model": "worldleveling:block/dark_forge_air_input",
+      "y": 270
+    },
+    "facing=east,type=air_in": {
+      "model": "worldleveling:block/dark_forge_air_input",
+      "y": 90
+    }
+  }
+}

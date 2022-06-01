@@ -1,0 +1,117 @@
+buildscript {
+  repositories {
+    maven {
+      url = 'https://maven.minecraftforge.net'
+    }
+    maven {
+      url = 'https://repo.spongepowered.org/maven'
+    }
+    mavenCentral()
+  }
+  dependencies {
+    classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+  }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+group = 'me.whizvox.worldleveling'
+version = '1.0-SNAPSHOT'
+
+java {
+  archivesBaseName = 'worldleveling'
+  toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+mixin {
+  add sourceSets.main, "worldleveling.refmap.json"
+}
+
+minecraft {
+  mappings channel: 'official', version: '1.18.2'
+  // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+  runs {
+    client {
+      workingDirectory project.file('run')
+      property 'forge.logging.markers', 'REGISTRIES'
+      property 'forge.logging.console.level', 'debug'
+      property 'forge.enabledGameTestNamespaces', 'worldleveling'
+      arg '-mixin.config=worldleveling.mixins.json'
+
+      mods {
+        worldleveling {
+          source sourceSets.main
+        }
+      }
+    }
+
+    server {
+      workingDirectory project.file('run')
+      property 'forge.logging.markers', 'REGISTRIES'
+      property 'forge.logging.console.level', 'debug'
+      property 'forge.enabledGameTestNamespaces', 'worldleveling'
+      arg '-mixin.config=worldleveling.mixins.json'
+
+      mods {
+        worldleveling {
+          source sourceSets.main
+        }
+      }
+    }
+
+    gameTestServer {
+      workingDirectory project.file('run')
+      property 'forge.logging.markers', 'REGISTRIES'
+      property 'forge.logging.console.level', 'debug'
+      property 'forge.enabledGameTestNamespaces', 'worldleveling'
+
+      mods {
+        worldleveling {
+          source sourceSets.main
+        }
+      }
+    }
+
+    data {
+      workingDirectory project.file('run')
+      property 'forge.logging.markers', 'REGISTRIES'
+      property 'forge.logging.console.level', 'debug'
+      args '--mod', 'worldleveling', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+      mods {
+        worldleveling {
+          source sourceSets.main
+        }
+      }
+    }
+  }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+}
+
+dependencies {
+  minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
+  annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+jar {
+  manifest {
+    attributes([
+        "Specification-Title"     : "worldleveling",
+        "Specification-Vendor"    : "whizvox",
+        "Specification-Version"   : "1", // We are version 1 of ourselves
+        "Implementation-Title"    : project.name,
+        "Implementation-Version"  : project.jar.archiveVersion,
+        "Implementation-Vendor"   : "whizvox",
+        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+        "MixinConfigs": "worldleveling.mixins.json"
+    ])
+  }
+}
+
+jar.finalizedBy('reobfJar')

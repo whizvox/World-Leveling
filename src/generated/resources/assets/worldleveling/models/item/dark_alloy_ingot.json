@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldleveling:item/dark_alloy_ingot"
+  }
+}

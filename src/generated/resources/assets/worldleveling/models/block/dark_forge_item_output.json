@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "side": "worldleveling:block/dark_bricks",
+    "front": "worldleveling:block/dark_bricks",
+    "bottom": "worldleveling:block/dark_forge_item_output",
+    "top": "worldleveling:block/dark_bricks"
+  }
+}

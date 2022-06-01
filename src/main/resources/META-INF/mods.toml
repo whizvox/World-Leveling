@@ -1,0 +1,30 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+license = "MIT"
+issueTrackerURL="https://github.com/whizvox/World-Leveling/issues"
+
+[[mods]]
+modId = "worldleveling"
+version = "${file.jarVersion}"
+displayName = "World Leveling"
+#updateJSONURL="???"
+displayURL="http://github.com/whizvox/World-Leveling" #optional
+#logoFile="worldleveling.png"
+authors = "whizvox"
+description = '''
+The world levels up with you. Level up skills and unlock cool abilities as you play through the game.
+'''
+
+[[dependencies.worldleveling]]
+modId="forge"
+mandatory = true
+versionRange = "[40,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.worldleveling]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,1.19)"
+ordering = "NONE"
+side = "BOTH"

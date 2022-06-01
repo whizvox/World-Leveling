@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "me.whizvox.worldleveling.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.8",
+  "refmap": "worldleveling.refmap.json",
+  "mixins": [
+    "ItemStackMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
