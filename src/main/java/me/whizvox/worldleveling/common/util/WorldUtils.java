@@ -3,17 +3,17 @@ package me.whizvox.worldleveling.common.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class WorldUtils {
@@ -40,7 +40,21 @@ public class WorldUtils {
     return setBlock(world, pos, state, nbt, Block.UPDATE_ALL);
   }
 
-    public static Rotation getRotationFromDirection(Direction direction) {
+  public static void dropInventory(Level level, BlockPos pos, IItemHandler inventory, boolean clearInventory) {
+    for (int i = 0; i < inventory.getSlots(); i++) {
+      ItemStack stack = inventory.getStackInSlot(i);
+      Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
+      if (clearInventory) {
+        stack.shrink(stack.getCount());
+      }
+    }
+  }
+
+  public static boolean shouldBlocksDropItems(Level level) {
+    return level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS);
+  }
+
+  public static Rotation getRotationFromDirection(Direction direction) {
     return switch (direction) {
       case EAST -> Rotation.CLOCKWISE_90;
       case SOUTH -> Rotation.CLOCKWISE_180;

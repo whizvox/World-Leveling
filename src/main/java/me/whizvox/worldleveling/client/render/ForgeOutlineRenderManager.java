@@ -50,7 +50,7 @@ public class ForgeOutlineRenderManager {
     }
     if (!item.isEmpty()) {
       IForgeType forgeType = ((ForgeStructureItem) item.getItem()).forgeType;
-      if (ForgeTierAbility.hasUnlocked(player, forgeType)) {
+      if (player.isCreative() || ForgeTierAbility.hasUnlocked(player, forgeType)) {
         BlockHitResult hitRes = WorldUtils.rayTraceBlock(world, player, 5.0);
         if (hitRes.getType() != HitResult.Type.MISS && hitRes.getDirection() == Direction.UP) {
           BlockPos centerPos = hitRes.getBlockPos().above();

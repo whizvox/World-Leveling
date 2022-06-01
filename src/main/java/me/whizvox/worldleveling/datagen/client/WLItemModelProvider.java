@@ -1,4 +1,4 @@
-package me.whizvox.worldleveling.datagen;
+package me.whizvox.worldleveling.datagen.client;
 
 import me.whizvox.worldleveling.WorldLeveling;
 import me.whizvox.worldleveling.common.lib.WLItems;

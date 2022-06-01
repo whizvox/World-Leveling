@@ -24,11 +24,13 @@ public interface IForgeType extends StringRepresentable {
 
   double getTemperatureChange();
 
-  Supplier<Block> getBricksBlock();
+  Supplier<? extends Block> getBricksBlock();
 
   Supplier<? extends Item> getBricksItem();
 
   Supplier<ForgeInterfaceBlock> getInterfaceBlock();
+
+  Supplier<? extends Item> getStructureItem();
 
   Supplier<ForgeValveBlock> getValveBlock();
 

@@ -19,7 +19,7 @@ public enum ForgeTypes implements IForgeType {
 
   SOOTY(1, 2000, 1.0) {
     @Override
-    public Supplier<Block> getBricksBlock() {
+    public Supplier<? extends Block> getBricksBlock() {
       return WLBlocks.SOOTY_BRICKS;
     }
     @Override
@@ -29,6 +29,10 @@ public enum ForgeTypes implements IForgeType {
     @Override
     public Supplier<ForgeInterfaceBlock> getInterfaceBlock() {
       return WLBlocks.SOOTY_FORGE_INTERFACE;
+    }
+    @Override
+    public Supplier<? extends Item> getStructureItem() {
+      return WLItems.SOOTY_FORGE;
     }
     @Override
     public Supplier<ForgeValveBlock> getValveBlock() {
@@ -50,7 +54,7 @@ public enum ForgeTypes implements IForgeType {
   },
   DARK(2, 4000, 2.0) {
     @Override
-    public Supplier<Block> getBricksBlock() {
+    public Supplier<? extends Block> getBricksBlock() {
       return WLBlocks.DARK_BRICKS;
     }
     @Override
@@ -60,6 +64,10 @@ public enum ForgeTypes implements IForgeType {
     @Override
     public Supplier<ForgeInterfaceBlock> getInterfaceBlock() {
       return WLBlocks.DARK_FORGE_INTERFACE;
+    }
+    @Override
+    public Supplier<? extends Item> getStructureItem() {
+      return WLItems.DARK_FORGE;
     }
     @Override
     public Supplier<ForgeValveBlock> getValveBlock() {

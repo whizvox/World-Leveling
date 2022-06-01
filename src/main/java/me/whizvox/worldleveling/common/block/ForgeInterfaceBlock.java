@@ -2,6 +2,7 @@ package me.whizvox.worldleveling.common.block;
 
 import me.whizvox.worldleveling.common.api.ability.mining.IForgeType;
 import me.whizvox.worldleveling.common.block.entity.ForgeInterfaceBlockEntity;
+import me.whizvox.worldleveling.common.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -94,6 +95,23 @@ public class ForgeInterfaceBlock extends Block implements EntityBlock {
       return forge;
     }
     return null;
+  }
+
+  @Override
+  public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
+    if (!state.is(newState.getBlock())) {
+      if (level.getBlockEntity(pos) instanceof ForgeInterfaceBlockEntity forge) {
+        WorldUtils.dropInventory(level, pos, forge.getFullInventory(), true);
+      }
+    }
+    super.onRemove(state, level, pos, newState, moving);
+  }
+
+  @Override
+  public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    if (level.getBlockEntity(pos) instanceof ForgeInterfaceBlockEntity forge) {
+      forge.collapseStructure(!player.isCreative());
+    }
   }
 
 }

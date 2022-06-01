@@ -3,7 +3,11 @@ package me.whizvox.worldleveling.common.block.entity;
 import me.whizvox.worldleveling.common.api.ability.mining.IForgeType;
 import me.whizvox.worldleveling.common.block.ForgeInterfaceBlock;
 import me.whizvox.worldleveling.common.inventory.menu.ForgeMenu;
+import me.whizvox.worldleveling.common.lib.multiblock.MultiBlockStructure;
+import me.whizvox.worldleveling.common.lib.multiblock.PlaceOptions;
+import me.whizvox.worldleveling.common.util.BlockOffset;
 import me.whizvox.worldleveling.common.util.InventoryUtils;
+import me.whizvox.worldleveling.common.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -60,7 +64,6 @@ public class ForgeInterfaceBlockEntity extends BlockEntity implements MenuProvid
 
   private final IForgeType forgeType;
 
-  private boolean formed;
   private final Inventory inventory;
   private final RangedWrapper inputInventory;
   private final RangedWrapper fuelInventory;
@@ -80,12 +83,15 @@ public class ForgeInterfaceBlockEntity extends BlockEntity implements MenuProvid
   // fuel caches
   private boolean hasValidFuel;
 
+  // multiblock caches
+  private MultiBlockStructure multiBlock;
+  private MultiBlockStructure.ResolvedStructure structure;
+
   private final ContainerData dataAccess;
 
   public ForgeInterfaceBlockEntity(IForgeType forgeType, BlockPos pos, BlockState state) {
     super(forgeType.getBlockEntityType().get(), pos, state);
     this.forgeType = forgeType;
-    formed = true;
     inventory = new Inventory();
     inputInventory = new RangedWrapper(inventory, SLOT_INPUT_START, SLOT_INPUT_END + 1);
     fuelInventory = new RangedWrapper(inventory, SLOT_FUEL_START, SLOT_FUEL_END + 1);
@@ -100,6 +106,9 @@ public class ForgeInterfaceBlockEntity extends BlockEntity implements MenuProvid
     cachedRecipes = new SmeltingRecipe[SLOTS_INPUT];
     mockOutputInventory = new ItemStackHandler(SLOTS_OUTPUT);
     hasValidFuel = false;
+
+    multiBlock = forgeType.getMultiBlock().get();
+    structure = null;
 
     dataAccess = new ContainerData() {
       @Override
@@ -135,6 +144,11 @@ public class ForgeInterfaceBlockEntity extends BlockEntity implements MenuProvid
     refreshFuelCaches();
     totalSmeltTime = calculateSmeltingTime();
     totalFuelTime = getBurnTime(getFirstValidFuelItem());
+    structure = multiBlock.resolveStructure(level, PlaceOptions.create(getBlockPos())
+        .rotation(WorldUtils.getRotationFromDirection(getBlockState().getValue(ForgeInterfaceBlock.FACING).getOpposite()))
+        .pivotPoint(new BlockOffset(1, 1, 2))
+        .build()
+    );
   }
 
   public IItemHandler getFullInventory() {
@@ -254,20 +268,20 @@ public class ForgeInterfaceBlockEntity extends BlockEntity implements MenuProvid
     return insertItem(stack, simulate, SLOT_OUTPUT_START, SLOT_OUTPUT_END);
   }
 
-  public boolean attemptForm(Level level, BlockPos pos, BlockState state) {
-    if (formed) {
-      return true;
-    }
-    return true;
+  public void balanceInputItems() {
   }
 
-  public void balanceInputItems() {
+  public void collapseStructure(boolean dropItems) {
+    for (MultiBlockStructure.ResolvedBlockEntry entry : structure.blocks()) {
+      if (level.getBlockState(entry.pos()) == entry.state()) {
+        level.destroyBlock(entry.pos(), dropItems);
+      }
+    }
   }
 
   @Override
   protected void saveAdditional(CompoundTag tag) {
     super.saveAdditional(tag);
-    tag.putBoolean("formed", formed);
     tag.put("inventory", inventory.serializeNBT());
     tag.putDouble("temperature", temperature);
     tag.putInt("fuelTime", fuelProgress);
@@ -277,7 +291,6 @@ public class ForgeInterfaceBlockEntity extends BlockEntity implements MenuProvid
   @Override
   public void load(CompoundTag tag) {
     super.load(tag);
-    formed = tag.getBoolean("formed");
     inventory.deserializeNBT(tag.getCompound("inventory"));
     temperature = tag.getDouble("temperature");
     fuelProgress = tag.getInt("fuelTime");
@@ -358,8 +371,11 @@ public class ForgeInterfaceBlockEntity extends BlockEntity implements MenuProvid
       return;
     }
     ForgeInterfaceBlockEntity forge = (ForgeInterfaceBlockEntity) be;
-    if (!forge.formed) {
-      return;
+    // check multiblock integrity every 10 ticks
+    if (world.getGameTime() % 10 == 0) {
+      if (!forge.structure.findMismatches(world).isEmpty()) {
+        forge.collapseStructure(WorldUtils.shouldBlocksDropItems(forge.level));
+      }
     }
     IForgeType forgeType = ((ForgeInterfaceBlock) forge.getBlockState().getBlock()).forgeType;
     if (forge.fuelProgress <= 0) {

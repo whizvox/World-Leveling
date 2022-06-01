@@ -25,7 +25,8 @@ public class ItemStackMixin {
       cancellable = true
   )
   private void toolTakeDamage(int damage, Random rand, ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
-    if (MinecraftForge.EVENT_BUS.post(new ItemDamagedEvent((ItemStack) (Object) this, damage, rand, player))) {
+    ItemStack self = (ItemStack) (Object) this;
+    if (MinecraftForge.EVENT_BUS.post(new ItemDamagedEvent(self, damage, rand, player))) {
       cir.cancel();
     }
   }
